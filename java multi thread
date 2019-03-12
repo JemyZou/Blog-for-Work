@@ -1,0 +1,25 @@
+Java 线程池执行关闭阻塞方法：
+    ExecutorService pool = Executors.newFixedThreadPool(2);
+    pool.execute(runnable);
+    pool.shutdown();
+    while (!pool.awaitTermination(1, TimeUnit.SECONDS)) {
+        //没有关闭
+    }
+    //已经关闭
+    
+shutdown()
+不能接受新的submit
+并没有任何的interrupt操作，会等待线程池中所有线程（执行中的以及排队的）执行完毕
+
+shutdownNow()
+会尝试interrupt线程池中正在执行的线程
+等待执行的线程也会被取消
+但是并不能保证一定能成功的interrupt线程池中的线程。
+会返回并未终止的线程列表List<Runnable>
+
+awaitTermination(n, TimeUnit)
+该方法返回值为boolean类型
+方法的两个参数规定了方法的阻塞时间，在阻塞时间内除非所有线程都执行完毕才会提前返回true
+如果到了规定的时间，线程池中的线程并没有全部结束返回false
+InterruptedException 这个异常也会导致方法的终止
+
